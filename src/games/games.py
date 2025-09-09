@@ -1,5 +1,5 @@
 class Games:
-    def piedra_papel_tijera(self, jugador1, jugador2):
+    def piedra_papel_tijera(self, jugador1:str, jugador2:str) ->str:
         """
         Determina el ganador del juego piedra, papel o tijera.
         
@@ -15,6 +15,22 @@ class Games:
             - Tijera vence a papel
             - Papel vence a piedra
         """
+        jugador1 = jugador1.lower() #Para que lea las minusculas y las mayusculas 
+        jugador2 = jugador2.lower()
+
+        reglas = {
+            "piedra":"tijera",
+            "tijera":"papel",
+            "papel":"piedra"
+        }
+        if jugador1 == jugador2:
+            return "empate"
+        elif reglas.get(jugador1) == jugador2:
+            return "jugador1"
+        elif reglas.get(jugador2) == jugador1:
+            return "jugador2"
+        else: 
+            return "invalid" 
         pass
     
     def adivinar_numero_pista(self, numero_secreto, intento):
@@ -28,9 +44,17 @@ class Games:
         Returns:
             str: "correcto", "muy alto" o "muy bajo"
         """
-        pass
+
+        if numero_secreto == intento:
+            return "correcto"
+        elif intento > numero_secreto:
+            return "muy alto"
+        elif intento < numero_secreto:
+            return "muy bajo"
+        else:
+            return "invalido"
     
-    def ta_te_ti_ganador(self, tablero):
+    def ta_te_ti_ganador(self, tablero:list) -> str:
         """
         Verifica si hay un ganador en un tablero de tic-tac-toe.
         
@@ -45,9 +69,29 @@ class Games:
              ["O", "O", " "],
              [" ", " ", " "]] -> "X"
         """
-        pass
+        for row in tablero:
+            if row[0] == row[1] == row[2] and row[0] != ' ':
+                return row[0]
+        
+        for col in range(3):
+            if tablero[0][col] == tablero[1][col] == tablero[2][col] and tablero[0][col] != ' ':
+                return tablero[0][col]
+        
+        if tablero[0][0] == tablero[1][1] == tablero[2][2] and tablero[0][0] != ' ': #holaaaaaaaa
+            return tablero [0][0]
+        
+        if tablero[0][2] == tablero[1][1] == tablero[2][0] and tablero [0][2] != ' ':
+            return tablero[0][2]
+        
+        for row in tablero:
+            for cell in row:
+                if cell == ' ':
+                    return "continua"
+        
+        return "empate"
     
-    def generar_combinacion_mastermind(self, longitud, colores_disponibles):
+    def generar_combinacion_mastermind(self, longitud: int , colores_disponibles: list) -> list:
+        import random
         """
         Genera una combinación aleatoria para el juego Mastermind.
         
@@ -62,9 +106,10 @@ class Games:
             generar_combinacion_mastermind(4, ["rojo", "azul", "verde"]) 
             -> ["rojo", "azul", "rojo", "verde"]
         """
-        pass
+        return [random.choice(colores_disponibles) for _ in range(longitud)]
+        
     
-    def validar_movimiento_torre_ajedrez(self, desde_fila, desde_col, hasta_fila, hasta_col, tablero):
+    def validar_movimiento_torre_ajedrez(self, desde_fila: int, desde_col:int , hasta_fila:int, hasta_col:int, tablero:list) -> bool:
         """
         Valida si un movimiento de torre en ajedrez es legal.
         
@@ -82,4 +127,24 @@ class Games:
             - La torre se mueve horizontal o verticalmente
             - No puede saltar sobre otras piezas
         """
-        pass
+        if not ( 0 <= desde_fila < 8 and 0 <= desde_col < 8 and 
+                0 <= hasta_fila <8 and 0<= hasta_col < 8 ):
+            return False 
+        
+        if desde_fila == hasta_fila and desde_col == hasta_col:
+            return False 
+            
+        if desde_fila != hasta_fila and desde_col != hasta_col:
+            return False
+        
+        if desde_fila == hasta_fila:
+            paso = 1 if hasta_col > desde_col else -1 
+            for col in range (desde_col + paso, hasta_col, paso):
+                if tablero[desde_fila] [col] != " ":
+                    return False 
+        elif desde_col == hasta_col:
+            paso = 1 if hasta_fila > desde_fila else -1 
+            for fila in range(desde_fila + paso, hasta_fila, paso):
+                if tablero [fila][desde_col] != " ":
+                    return False 
+        return True 
